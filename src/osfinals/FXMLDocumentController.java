@@ -35,12 +35,15 @@ public class FXMLDocumentController implements Initializable {
     private TextField headStart;
     
     @FXML
+    private TextField diskSize;
+    
+    @FXML
     private Button runBtn;
 
     @FXML
     private Text headMovement;
     
-    private final int MAX_CYLINDERS = 200;
+    private int MAX_CYLINDERS = 0;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -65,12 +68,12 @@ public class FXMLDocumentController implements Initializable {
 
                 // Add the distance to the total head movement
                 totalHeadMovement += distance;
+                System.out.println("Distance Between " + request + " and " + headPosition + " is " + distance);
 
                 // Update the head position
                 headPosition = request;
-                System.out.println(headPosition);
                 // Add the new head position to the chart
-                series.getData().add(new XYChart.Data<>(i+1, headPosition));
+                series.getData().add(new XYChart.Data<>(i+1 , headPosition));
             }
             
             // Display the total head movement on the UI
@@ -79,20 +82,24 @@ public class FXMLDocumentController implements Initializable {
             // Clear any existing data from the chart and add the new series
             seekGraph.getData().clear();
             seekGraph.getData().add(series);
-
+            MAX_CYLINDERS = Integer.parseInt(diskSize.getText());
             // Set the chart axis bounds
             NumberAxis xAxis = (NumberAxis) seekGraph.getXAxis();
-            xAxis.setLabel("Seek Time");
             xAxis.setAutoRanging(false);
             xAxis.setLowerBound(0);
+            xAxis.setTickLabelGap(3);
+            xAxis.setTickLength(5);
+            xAxis.setTickUnit(1);
             xAxis.setUpperBound(10);
 
             NumberAxis yAxis = (NumberAxis) seekGraph.getYAxis();
-            yAxis.setLabel("Track Number");
             yAxis.setAutoRanging(false);
             yAxis.setTickUnit(1);
             yAxis.setLowerBound(0);
-            yAxis.setUpperBound(MAX_CYLINDERS);
+            yAxis.setTickLabelGap(3);
+            yAxis.setTickLength(8);
+            yAxis.setTickUnit(10);
+            yAxis.setUpperBound(MAX_CYLINDERS-1);
         });
     }
 }
